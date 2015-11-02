@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sfdc http://www.mulesoft.org/schema/mule/sfdc/current/mule-sfdc.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+
+
+	<sfdc:config name="Salesforce__Basic_authentication"
+		username="${salesforce.username}" password="${salesforce.password}"
+		securityToken="${salesforce.securityToken}" doc:name="Salesforce: Basic authentication" />
+
+	<http:listener-config name="HTTP_Listener_Configuration"
+		host="${http.host}" port="${http.port}" doc:name="HTTP Listener Configuration" />
+
+	<flow name="tutorialsFlow">
+		<http:listener config-ref="HTTP_Listener_Configuration"
+			path="/test" allowedMethods="GET" doc:name="HTTP" />
+		<sfdc:query config-ref="Salesforce__Basic_authentication"
+			query="SELECT Id,name,ProfileId,IsActive FROM User" doc:name="Salesforce query" />
+		<logger message="#[message] #[payload.getClass().getName()]" level="INFO" doc:name="Logger" />
+		
+		<custom-transformer class="com.middleware.transformer.CustomTransformer" doc:name="Java" />
+		<logger message="Salesforce users: #[payload]" level="INFO" doc:name="Logger" />
+		
+		<custom-transformer class="com.middleware.transformer.SalesforceDeleteCustomTransformer" doc:name="Java" />
+		<logger message="Salesforce user ids: #[payload]" level="INFO" doc:name="Logger" />
+		
+		<sfdc:delete config-ref="Salesforce__Basic_authentication" doc:name="Salesforce">
+			<sfdc:ids ref="#[payload]" />
+		</sfdc:delete>
+		
+	</flow>
+</mule>
