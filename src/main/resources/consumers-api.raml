@@ -1,0 +1,1222 @@
+#%RAML 0.8
+title: Helpchat Consumers
+baseUri: http://172.16.1.113:8080/consumers
+protocols: [HTTP, HTTPS]
+version: v1.0
+mediaType: application/json
+documentation:
+ - title: Home
+   content: |
+     Welcome to the _Helpchat API_ Documentation. The _Helpchat API_
+     allows you to connect your application to our chat service. You may also benefit from one of our [engineering blog](http://engineering.akosha.com/) to understand that how did we actually scale our application.
+schemas:
+  - error: | 
+      {
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "title": "Error response schema.",
+        "description": "A generic error response schema.",
+        "name": "error",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "title": "status",
+            "description": "HTTP status code."
+          },
+          "code": {
+            "type": "string",
+            "title": "code",
+            "description": "Application level error code."
+          },
+          "message": {
+            "type": "string",
+            "title": "message",
+            "description": "Error message."
+          },
+          "info": {
+            "type": "string",
+            "title": "doc",
+            "name": "doc",
+            "description": "Error web documentation link."
+          },
+          "details": {
+            "type": "array",
+            "title": "Detailed error messages.",
+            "description": "Detailed error messages.",
+            "name": "details",
+            "items": {
+              "type": "string"
+              },
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        }
+      }
+  - address: | 
+      {
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "type": "object",
+        "title": "Address schema.",
+        "description": "A generic address schema.",
+        "name": "address",
+        "properties": {
+          "line1": {
+            "type": "string",
+            "title": "line1",
+            "description": "Address line 1"
+          },
+          "line2": {
+            "type": "string",
+            "title": "line2",
+            "name": "line2",
+            "description": "Address line 2"
+          },
+          "city": {
+            "type": "string",
+            "title": "city",
+            "name": "city",
+            "description": "Name of the city"
+          },
+          "state": {
+            "type": "string",
+            "title": "state",
+            "name": "state",
+            "description": "Name of the state"
+          },
+          "country": {
+            "type": "string",
+            "title": "country",
+            "name": "country",
+            "description": "Name of the country"
+          },
+          "zipcode": {
+            "type": "string",
+            "title": "zipcode",
+            "name": "zipcode",
+            "description": "Zipcode"
+          }
+        }
+      }
+  - brand_category: | 
+      {
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "type": "object",
+        "title": "Brand category.",
+        "description": "Brand category schema.",
+        "name": "brand_category",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Brand category identifier",
+            "description": "Brand category identifier.",
+            "name": "category_id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Brand category name",
+            "description": "Brand category name.",
+            "name": "category_name"
+          }
+        }
+      }
+  - mobile: | 
+      {
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "type": "object",
+        "title": "User",
+        "name": "user",
+        "description": "User detailed information.",
+        "properties": {
+          "number": {
+            "type": "string",
+            "title": "Mobile number",
+            "description": "Mobile number.",
+            "name": "number"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "inactive",
+              "deleted"
+            ],
+            "title": "Status",
+            "description": "Status of the mobile number.",
+            "name": "status"
+          },
+          "otp_authenticated": {
+            "type": "boolean",
+            "title": "Mobile opt authenticated",
+            "description": "Mobile opt authenticated.",
+            "name": "otp_authenticated"
+          }
+        }
+      }
+  - brand: | 
+      {
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "type": "object",
+        "title": "Brand",
+        "name": "brand",
+        "description": "An explanation about the purpose of this instance described by this schema.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id",
+            "description": "An explanation about the purpose of this instance described by this schema.",
+            "name": "id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "An explanation about the purpose of this instance described by this schema.",
+            "name": "name"
+          },
+          "active": {
+            "type": "boolean",
+            "title": "Active",
+            "description": "An explanation about the purpose of this instance described by this schema.",
+            "name": "active"
+          },
+          "channel": {
+            "type": "boolean",
+            "title": "Channel",
+            "description": "An explanation about the purpose of this instance described by this schema.",
+            "name": "channel"
+          },
+          "address": {
+            "$ref": "address"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "brand_category",
+              "type": "object"
+            }
+          },
+          "website": {
+            "type": "string",
+            "title": "Website",
+            "description": "An explanation about the purpose of this instance described by this schema.",
+            "name": "website"
+          },
+          "logo": {
+            "type": "string",
+            "title": "Logo",
+            "description": "An explanation about the purpose of this instance described by this schema.",
+            "name": "logo"
+          },
+          "support_email": {
+            "type": "string",
+            "title": "Support email",
+            "description": "An explanation about the purpose of this instance described by this schema.",
+            "name": "support_email"
+          },
+          "support_number": {
+            "type": "string",
+            "title": "Support phone number",
+            "description": "An explanation about the purpose of this instance described by this schema.",
+            "name": "support_number"
+          },
+          "twitter_url": {
+            "type": "string",
+            "title": "Twitter url",
+            "description": "An explanation about the purpose of this instance described by this schema.",
+            "name": "twitter_url"
+          },
+          "facebook_url": {
+            "type": "string",
+            "title": "Facebook url",
+            "description": "An explanation about the purpose of this instance described by this schema.",
+            "name": "facebook_url"
+          },
+          "powered_by": {
+            "type": "string",
+            "title": "Powered by",
+            "description": "An explanation about the purpose of this instance described by this schema.",
+            "name": "powered_by"
+          },
+          "verified": {
+            "type": "boolean",
+            "title": "Verified schema.",
+            "description": "An explanation about the purpose of this instance described by this schema.",
+            "name": "verified"
+          },
+          "created_time": {
+            "type": "integer",
+            "title": "Created timestamp of the brand.",
+            "description": "Created timestamp.",
+            "name": "created_time"
+          },
+          "last_updated_time": {
+            "type": "integer",
+            "title": "Last update timestamp of brand.",
+            "description": "An explanation about the purpose of this instance described by this schema.",
+            "name": "last_updated_time"
+          }
+        }
+      }
+  - brand_metadata: | 
+      {
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "type": "object",
+        "title": "Brand metadata schema.",
+        "description": "Brand meta information.",
+        "name": "brand_metadata",
+        "properties": {
+          "active_sessions": {
+            "type": "integer",
+            "title": "active_sessions",
+            "description": "Number of brand current active sessions.",
+            "name": "active_sessions"
+          },
+          "avg_response_time": {
+            "type": "integer",
+            "title": "avg_response_time",
+            "description": "Brand agents average response time.",
+            "name": "avg_response_time"
+          },
+          "faq": {
+            "type": "array",
+            "title": "faq",
+            "description": "Brand FAQ's.",
+            "name": "faq",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        }
+      }
+  - brands: | 
+      {
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "type": "object",
+        "title": "Brands schema.",
+        "description": "An explanation about the purpose of this instance described by this schema.",
+        "name": "brands",
+        "properties": {
+          "brands": {
+            "type": "array",
+            "title": "Brands schema.",
+            "description": "An explanation about the purpose of this instance described by this schema.",
+            "name": "brands",
+            "items": {
+              "$ref": "brand",
+              "type": "object"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        }
+      }
+  - brands_altered: |
+      {
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "type": "object",
+        "title": "BrandsAltered",
+        "description": "An explanation about the purpose of this instance described by this schema.",
+        "name": "brands_altered",
+        "properties": {
+          "added_brands": {
+            "type": "array",
+            "title": "Brands schema.",
+            "description": "An explanation about the purpose of this instance described by this schema.",
+            "name": "added_brands",
+            "items": {
+              "$ref": "brand"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "updated_brands": {
+            "type": "array",
+            "title": "Brands schema.",
+            "description": "An explanation about the purpose of this instance described by this schema.",
+            "name": "updated_brands",
+            "items": {
+              "$ref": "brand"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "deleted_brands": {
+            "type": "array",
+            "title": "Brands schema.",
+            "description": "An explanation about the purpose of this instance described by this schema.",
+            "name": "deleted_brands",
+            "items": {
+              "$ref": "brand"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        }
+      }
+  - user: | 
+      {
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "type": "object",
+        "title": "User",
+        "name": "user",
+        "description": "User detailed information.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id",
+            "description": "Unique identifier of the user.",
+            "name": "id"
+          },
+          "first_name": {
+            "type": "string",
+            "description": "First name of the user.",
+            "name": "first_name"
+          },
+          "last_name": {
+            "type": "string",
+            "description": "Last name of the user.",
+            "name": "last_name"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "description": "Email of the user.",
+            "name": "email"
+          },
+          "mobile": {
+            "$ref": "mobile"
+          },
+          "address": {
+            "$ref": "address"
+          },
+          "channel_id": {
+            "type": "string",
+            "description": "User unique channel id.",
+            "name": "ChannelId"
+          },
+          "channel_key": {
+            "type": "string",
+            "description": "Key of the user unique channel id.",
+            "name": "ChannelKey"
+          },
+          "image_url": {
+            "type": "string",
+            "title": "Image url",
+            "description": "Image URL of the user.",
+            "name": "image_url"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "inactive",
+              "deleted"
+            ],
+            "title": "Status",
+            "description": "Status of the user.",
+            "name": "status"
+          },
+          "created_time": {
+            "type": "integer",
+            "title": "Created timestamp of the user.",
+            "description": "Created timestamp.",
+            "name": "created_time"
+          },
+          "last_updated_time": {
+            "type": "integer",
+            "title": "Last update timestamp of user.",
+            "description": "Last updated timestamp.",
+            "name": "last_updated_time"
+          }
+        }
+      }
+  - consumer_address: | 
+      {
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "name": "ConsumerAddress",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier of the consumer address.",
+            "name": "id"
+          },
+          "first_name": {
+            "type": "string",
+            "name": "first_name",
+            "required": true,
+            "description": "First name"
+          },
+          "last_name": {
+            "type": "string",
+            "name": "last_name",
+            "description": "First name"
+          },
+          "line1": {
+            "type": "string",
+            "name": "line1",
+            "required": true,
+            "description": "Address line 1."
+          },
+          "line2": {
+            "type": "string",
+            "name": "line2",
+            "description": "Address line 2."
+          },
+          "city": {
+            "type": "string",
+            "name": "city",
+            "required": true,
+            "description": "Name of the city."
+          },
+          "state": {
+            "type": "string",
+            "name": "state",
+            "required": true,
+            "description": "Name of the state."
+          },
+          "country": {
+            "type": "string",
+            "name": "country",
+            "required": true,
+            "description": "Name of the country."
+          },
+          "zipcode": {
+            "type": "string",
+            "name": "zipcode",
+            "required": true,
+            "description": "Zipcode"
+          },
+          "contact_number": {
+            "type": "string",
+            "description": "Contact number.",
+            "name": "contact_number"
+          },
+          "default": {
+            "type": "boolean",
+            "name": "default",
+            "required": true,
+            "description": "Whether it's a default address."
+          },
+          "tag": {
+            "type": "string",
+            "name": "tag",
+            "description": "Tag name of the address."
+          },
+          "longitude": {
+            "type": "number",
+            "name": "longitude",
+            "description": "Logitude of the location."
+          },
+          "latitude": {
+            "type": "number",
+            "name": "latitude",
+            "description": "Latitude of the location."
+          }
+        }
+      }
+  - consumer_addresses: | 
+      {
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "type": "object",
+        "description": "User addresses.",
+        "name": "consumer_addresses",
+        "properties": {
+          "addresses": {
+            "type": "array",
+            "description": "User addresses array.",
+            "name": "consumer_addresses",
+            "items": {
+              "$ref": "consumer_address",
+              "type": "object"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        }
+      }
+  - user_favourite_brands_patches: | 
+      {
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "title": "Product set",
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": {
+          "title": "UserFavouriteBrandsPatches",
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "enum": [
+                "add",
+                "replace",
+                "remove"
+              ],
+              "description": "Operation to be done on the JSON field provided in path."
+            },
+            "path": {
+              "type": "string",
+              "title": "Path",
+              "name": "path",
+              "description": "JSON field to be added/updated/removed."
+            },
+            "value": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            }
+          }
+        }
+      }
+  - chat_message: | 
+      {
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "title": "chat_message",
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "object",
+            "required": true,
+            "name": "message",
+            "description": "Message details.",
+            "properties": {
+              "content": {
+                "type": "string",
+                "title": "message",
+                "name": "message",
+                "required": true,
+                "description": "Chat text message."
+              },
+              "id": {
+                "type": "string",
+                "title": "message_id",
+                "required": true,
+                "description": "Unique id of the message.",
+                "name": "message_id"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "text",
+                  "image",
+                  "file"
+                ],
+                "title": "type",
+                "required": true,
+                "description": "Type of the message.",
+                "name": "type"
+              }
+            }
+          },
+          "sender": {
+            "$ref": "user",
+            "required": true
+          },
+          "brand": {
+            "$ref": "brand",
+            "required": true
+          },
+          "source": {
+            "type": "object",
+            "name": "source",
+            "description": "Initiator of the message.",
+            "required": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "required": true,
+                "description": "Id of the source.",
+                "name": "id"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "campaign"
+                ],
+                "required": true,
+                "description": "Type of the source.",
+                "name": "type"
+              }
+            }
+          }
+        }
+      }
+  - hypermedia: | 
+      {
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "type": "object",
+        "title": "Hypermedia",
+        "description": "Hypermedia(HATEOAS) schema.",
+        "name": "hypermedia",
+        "properties": {
+          "_links": {
+            "type": "object",
+            "title": "Links",
+            "name": "Links",
+            "description": "Hypermedia links",
+            "properties": {
+              "self": {
+                "type": "object",
+                "title": "Self",
+                "name": "Self",
+                "description": "Hypermedia links",
+                "properties": {
+                  "href": {
+                    "type": "string",
+                    "title": "Href",
+                    "name": "Href",
+                    "description": "Hyperlink reference"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+  - user_signup_request: | 
+      {
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "name": "UserSignupRequest",
+        "type": "object",
+        "properties": {
+          "channel_id": {
+            "type": "string",
+            "name": "ChannelId",
+            "description": "User unique channel id."
+          },
+          "mobile": {
+            "type": "string",
+            "name": "mobile",
+            "required": true,
+            "description": "User unique mobile number."
+          },
+          "device_id": {
+            "type": "string",
+            "name": "deviceId",
+            "required": true,
+            "description": "Unique device id"
+          },
+          "otp": {
+            "type": "string",
+            "name": "otp",
+            "required": true,
+            "description": "Generated otp"
+          }
+        }
+      }
+  - user_signup_response: | 
+      {
+        "$schema": "http://json-schema.org/draft-03/schema",
+        "name": "UserSignupResponse",
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "user",
+            "description": "User details."
+          },
+          "favourite_companies": {
+            "type": "array",
+            "description": "User favourite companies.",
+            "name": "FavouriteCompanies",
+            "items": {
+              "type": "integer"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "auth": {
+            "type": "object",
+            "properties": {
+              "token": {
+                "type": "string",
+                "name": "token",
+                "description": "Generated akosha token."
+              }
+            }
+          }
+        }
+      }
+/v1/brands:
+  displayName: Brands
+  description: Brands resource.
+  get:
+    description: Get all brands added/updated/deleted after provided timestamp.
+    headers:
+      X-HELPCHAT-AUTH:
+        required: true
+    queryParameters:
+      since: 
+        required: true
+        type: integer
+        minimum: 946684800000
+        example: 1432980993000
+    responses:
+      200:
+        description: OK
+        body:
+          application/json:
+            schema: brands_altered
+  /{brandId}: 
+    displayName: Brand
+    uriParameters:
+      brandId:
+        displayName: Brand ID
+        type: integer
+    get:
+      description: Get brand resource by id.
+      headers:
+        X-HELPCHAT-AUTH:
+          required: true
+      responses:
+        200:
+          body:
+            application/json:
+              schema: brand
+              example: |
+                {
+                  "id": "1",
+                  "name": "Go Air",
+                  "active": true,
+                  "channel": false,
+                  "address": {
+                    "line1": "Go Airlines (India) Ltd.\r\nPaper Box House,\r\nOff Mahakali Caves Road,\r\nAndheri(E), Mumbai-400093.\r\nTel: 91-22-6741 0000, Fax:91-22-6742 0008"
+                  },
+                  "categories": [
+                    {
+                      "id": 1,
+                      "name": "Airlines"
+                    }
+                  ],
+                  "website": "https://www.goair.in/",
+                  "logo": "go_air.png",
+                  "support_email": "Refunds@goair.in",
+                  "twitter_url": "https://twitter.com/goairlinesindia",
+                  "facebook_url": "https://www.facebook.com/GoAir",
+                  "verified": false,
+                  "created_time": 1415782236000,
+                  "last_updated_time": 1419684026000
+                }
+        404:
+          description: Not found
+          body:
+            application/json:
+              schema: error
+    /metadata:
+      displayName: BrandMetadata
+      get:
+        description: Brand metadata information.
+        headers:
+          X-HELPCHAT-AUTH:
+            required: true
+        responses:
+          200:
+            description: OK
+            body:
+              application/json:
+                schema: brand_metadata
+          404:
+            description: Not found
+            body:
+              application/json:
+                schema: error
+/v1/customers:
+  displayName: Customers
+  description: Customers resource
+  /me:
+    displayName: Customers
+    get:
+      description: Get the user resource of the provided user id.
+      headers:
+        X-HELPCHAT-AUTH:
+          required: true
+      responses:
+        200:
+          body:
+            application/json:
+              schema: user
+              example:
+        404: 
+          description: Not found
+          body:
+              application/json:
+                schema: error
+    put:
+      description: Replace user resource.
+      headers:
+        X-HELPCHAT-AUTH:
+          required: true
+        Content-Type:
+          required: true
+          example: application/json
+      body:
+        application/json:
+          schema: user
+          example:
+      responses:
+        204:
+          description: No content
+        409:
+          description: Conflict
+          body:
+            application/json:
+              schema: error
+    /logout:
+      displayName: CustomerLogout
+      post:
+        description: Customer logout.
+        headers:
+          X-HELPCHAT-AUTH:
+            required: true
+        responses:
+          204:
+            description: No content
+          401:
+            description: Unauthorized
+            body:
+              application/json:
+                schema: error
+    /brands:
+      displayName: FavouriteBrands
+      get:
+        description: Get the user favourite brands resource.
+        headers:
+          X-HELPCHAT-AUTH:
+            required: true
+        responses:
+          200:
+            description: OK
+            body:
+              application/json:
+                schema: brands
+                example:
+          404:
+            description: Not found
+            body:
+              application/json:
+                schema: error
+      patch:
+        description: Update the user favourite companies resource.
+        headers:
+          X-HELPCHAT-AUTH:
+            required: true
+          Content-Type:
+            required: true
+            example: application/json
+        body:
+          application/json:
+            schema: user_favourite_brands_patches
+        responses:
+          204:
+            description: No content
+          404:
+            description: User not found
+            body:
+              application/json:
+                schema: error
+    /photos:
+      displayName: ProfilePhotos
+      description: User profile photo resource.
+      post:
+        description: Upload profile photo resource of the user.
+        headers:
+          X-HELPCHAT-AUTH:
+            required: true
+          Content-Type: 
+            required: true
+            example: multipart/form-data
+        body:
+          multipart/form-data:
+            formParameters:
+              photo:
+                description: Photo to be uploaded
+                required: true
+                type: file
+        responses:
+          202:
+            description: Accepted
+            body:
+              application/json:
+                schema: hypermedia
+                example: | 
+                  {
+                    "_links": {
+                      "self": { 
+                        "href": "aws_image_url"
+                      }
+                    }
+                  }
+    /files:
+      displayName: Files
+      description: File upload resource.
+      post:
+        description: Upload a file.
+        headers:
+          X-HELPCHAT-AUTH:
+            required: true
+          Content-Type: 
+            required: true
+        body:
+          multipart/form-data:
+            formParameters:
+              file:
+                description: The file to be uploaded
+                required: true
+                type: file
+        responses:
+          202:
+            description: Accepted
+            body:
+              application/json:
+                schema: hypermedia
+                example: | 
+                  {
+                    "_links": {
+                      "self": { 
+                        "href": "aws_file_url"
+                      }
+                    }
+                  }
+    /addresses:
+      displayName: CustomerAddresses
+      description: User addresses.
+      get:
+        description: Get user addresses.
+        headers:
+          X-HELPCHAT-AUTH:
+            required: true
+        responses:
+          200:
+            description: OK
+            body: 
+              application/json:
+                schema: consumer_addresses
+      post:
+        description: Create user address.
+        headers:
+          X-HELPCHAT-AUTH:
+            required: true
+          Content-Type:
+            required: true
+            default: application/json
+        body:
+          application/json:
+            schema: consumer_address
+        responses:
+          201:
+            description: Created
+            body:
+              application/json:
+                schema: consumer_address
+          400:
+            description: Bad request
+            body:
+              application/json:
+                schema: error
+      /{addressId}:
+        displayName: CustomerAddress
+        uriParameters:
+          addressId:
+            displayName: addressId
+            type: integer
+        /mark-as-default:
+          displayName: MarkAddressAsDefault
+          post:
+            description: Mark the address as default.
+            headers:
+              X-HELPCHAT-AUTH:
+                required: true
+            responses:
+              204:
+                description: No content
+              404:
+                description: Not found
+                body:
+                  application/json:
+                    schema: error
+        get:
+          description: Get user address.
+          headers:
+            X-HELPCHAT-AUTH:
+              required: true
+          responses:
+            200:
+              description: OK
+              body: 
+                application/json:
+                  schema: consumer_address
+            404:
+              description: Not found
+              body:
+                application/json:
+                  schema: error
+        put:
+          description: Update user address.
+          headers:
+            X-HELPCHAT-AUTH:
+              required: true
+            Content-Type:
+              required: true
+              default: application/json
+          body:
+            application/json:
+              schema: consumer_address
+          responses:
+            204:
+              description: No content
+            404:
+              description: Not found
+              body:
+                application/json:
+                  schema: error
+        delete:
+          description: Delete user address.
+          headers:
+            X-HELPCHAT-AUTH:
+              required: true
+            Content-Type:
+              required: true
+              default: application/json
+          responses:
+            204:
+              description: No content
+            404:
+              description: Not found
+              body:
+                application/json:
+                  schema: error
+    /conversations/{id}/rate:
+      displayName: Conversations
+      description: Conversations resource.
+      post:
+        description: Conversation/Session rating.
+        headers:
+          X-HELPCHAT-AUTH:
+            required: true
+        body:
+          application/x-www-form-urlencoded:
+            formParameters:
+              rating:
+                description: Rating of the conversation provided by the customer.
+                type: integer
+                required: true
+                maximum: 5
+                minimum: 1
+        responses:
+          204:
+            description: No content
+          404:
+            description: Conversation not found
+          400:
+            description: Bad request
+    /messages:
+      displayName: Messages
+      description: User messages resource.
+      post:
+        description: Send message to the agent.
+        headers:
+          X-HELPCHAT-AUTH:
+            required: true
+          Content-Type: 
+            required: true
+            example: application/json
+        body:
+          application/json:
+            schema: chat_message
+            example: | 
+              {
+                "message": {
+                    "content": "hi hello world!!",
+                    "id": "unique_message_id",
+                    "type": "text"
+                },
+                "sender": {
+                    "name": "Rod Johnson"
+                },
+                "brand": {
+                    "id": 3
+                }
+              }
+        responses:
+          201:
+            description: Created
+          400:
+            description: Bad request
+            body:
+              application/json:
+                schema: error
+          404:
+            description: User not found
+            body:
+              application/json:
+                schema: error
+  /signup:
+    displayName: Signup
+    post:
+      description: User signup api.
+      body:
+        application/json: 
+          schema: user_signup_request
+          example: |
+            {
+              "mobile": "8888888888",
+              "device_id": "unique_device_id",
+              "otp": "1234"
+            }
+      responses:
+        200:
+          description: Ok
+          body:
+            application/json:
+              schema: user_signup_response
+              example: | 
+                {
+                  "user": {
+                      "channel_id": "c0c7273d-7bf2-4f32-a63f-7e34dd62c440",
+                      "channel_key": "4da3c02c-d67a-4bbd-82c4-e9d6b5932e5a_c0c7273d-7bf2-4f32-a63f-7e34dd62c440",
+                      "mobile": {
+                          "number": "918888888888"
+                      },
+                      "address": {},
+                      "created_time": 1435256491000
+                  },
+                  "favourite_companies": [],
+                  "auth": {
+                      "token": "eyJpZCI6MTg5NTE1LCJtb2JpbGUiOiI5MTg4ODQ2MTIxMDAiLCJleHBpcmVzIjoxNzUwNjE2NDkxNDc1fQ==.EhqL5SpZOpzToFMy4AWKkZDQt2FQTiQ/vcvyff7ZVcg="
+                  }
+                }
+        201:
+          description: Created
+          body:
+            application/json:
+              schema: user_signup_response
+              example: | 
+                {
+                  "user": {
+                      "channel_id": "c0c7273d-7bf2-4f32-a63f-7e34dd62c440",
+                      "channel_key": "4da3c02c-d67a-4bbd-82c4-e9d6b5932e5a_c0c7273d-7bf2-4f32-a63f-7e34dd62c440",
+                      "mobile": {
+                          "number": "8884612100"
+                      },
+                      "address": {},
+                      "created_time": 1435256491000
+                  },
+                  "favourite_companies": [],
+                  "auth": {
+                      "token": "eyJpZCI6MTg5NTE1LCJtb2JpbGUiOiI5MTg4ODQ2MTIxMDAiLCJleHBpcmVzIjoxNzUwNjE2NDkxNDc1fQ==.EhqL5SpZOpzToFMy4AWKkZDQt2FQTiQ/vcvyff7ZVcg="
+                  }
+                }
+        400:
+          description: Bad request
+          body:
+            application/json:
+              schema: error
+        403:
+          description: Forbidden
+          body:
+            application/json:
+              schema: error
